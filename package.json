@@ -1,0 +1,19 @@
+{
+  "name": "momentumapp",
+  "version": "1.0.0",
+  "description": "App to get latest momentum wallpapers and set as background.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shishirchawla/momentumapp.git"
+  },
+  "author": "Shishir Chawla",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shishirchawla/momentumapp/issues"
+  },
+  "homepage": "https://github.com/shishirchawla/momentumapp#readme"
+}
