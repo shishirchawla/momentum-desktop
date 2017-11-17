@@ -2,6 +2,13 @@ var prompt = require('prompt');
 var fs = require('fs');
 var handlebars = require('handlebars');
 
+var schema = {
+    properties: {
+        'username (email)': { },
+        'password': { hidden: true }
+    }
+};
+
 /* Start prompt. */
 prompt.start();
 
@@ -16,7 +23,7 @@ function success() {
 
 /* Get username and password. */
 console.log('please enter your momentum account details');
-prompt.get(['username (email)', 'password'], function (err, result) {
+prompt.get(schema, function (err, result) {
     fs.readFile('./userdata/userinfo_template.js', {encoding: 'utf-8'}, function(err,data){
         var template = handlebars.compile(data);
         var credentials = { 'username' : result['username (email)'], 'password' : result.password };
