@@ -17,7 +17,7 @@ function success() {
     console.log("user credentials successfully saved!");
     console.log("\n\nconfiguration:");
     console.log("next install forever by running the following command - ' npm install forever -g '");
-    console.log("then run - ' npm start momentum-desktop ', and you are all set!");
+    console.log("then start service by running - ' npm start . ', from the installed location.");
     console.log("\n\n\n");
 }
 

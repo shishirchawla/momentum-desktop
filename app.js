@@ -1,12 +1,18 @@
 // import node modules
 var request = require('request');
 var fs = require('fs');
+var notifier = require('node-notifier');
+var path = require('path');
 var schedule = require('node-schedule');
 var wallpaper = require('wallpaper');
 
 var util = require('./util');
 var config = require('./config');
 var userinfo = require('./userdata/userinfo');
+
+
+var altBack = false;
+var altBackObj = null;
 
 /* Sets desktop background to todays wallpaper. */
 function setLatestBackground() {
@@ -22,7 +28,6 @@ function setLatestBackground() {
         if (response.statusCode != 200) {
             // TODO: get new token
             console.log('error in getting wallpapers: access token may be out of date.');
-            console.log(userinfo);
             return;
         }
         console.log('Wallpapers for ' + util.getActiveDateString() +':');
@@ -31,14 +36,52 @@ function setLatestBackground() {
             console.log(background);
             // check background is for today
             if (background.forDate == util.getActiveDateString()) {
-                // set backgorund
-                util.download(background.filename, 'backgrounds/' + background.title, function() {
-                    console.log('Download successful for ' + background.filename + '(' + background.title + ')');
-                    wallpaper.set('./backgrounds/' + background.title);
-                });
-                return true;
+                if (background.filename.startsWith("http")) {
+                    // TODO: Sometimes local links are returned by momentum, no
+                    // clean way of dealing with this.
+
+                    // set background
+                    util.download(background.filename, 'backgrounds/' + background.title, function() {
+                        console.log('Download successful for ' + background.filename + '(' + background.title + ')');
+                        wallpaper.set('./backgrounds/' + background.title);
+                        // fire notification
+                        notifier.notify({
+                            title: 'Background changed',
+                            message: background.title,
+                            icon: path.join(__dirname, 'backgrounds/' + background.title),
+                            sound: true
+                        }, function (err, response) { });
+                    });
+                    return true;
+                } else {
+                    altBack = true;
+                }
+            } else {
+                if (background.filename.startsWith("http")) {
+                    altBackObj = background;
+                    if (altBack == true) {
+                        return true;
+                    }
+                }
             }
         });
+
+        /* Set the alternate background if todays background did not work. */
+        if (altBack == true && altBackObj != null) {
+            // set background
+            util.download(altBackObj.filename, 'backgrounds/' + altBackObj.title, function() {
+                console.log('Download successful for ' + altBackObj.filename + '(' + altBackObj.title + ')');
+                wallpaper.set('./backgrounds/' + altBackObj.title);
+                // fire notification
+                notifier.notify({
+                    title: 'Background changed',
+                    message: altBackObj.title,
+                    icon: path.join(__dirname, 'backgrounds/' + altBackObj.title),
+                    sound: true
+                }, function (err, response) { });
+            });
+        }
+
     });
 }
 
