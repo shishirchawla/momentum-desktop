@@ -1,6 +1,6 @@
 {
   "name": "momentum-desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "App to get latest momentum wallpapers and set as background.",
   "main": "app.js",
   "scripts": {
