@@ -40,15 +40,18 @@ function setLatestBackground() {
                     // TODO: Sometimes local links are returned by momentum, no
                     // clean way of dealing with this.
 
+                    var fileExt = background.filename.substr(background.filename.lastIndexOf('.') + 1);
+                    var backgroundName = background.title.replace(/ /g,"_").replace(/,/g,"_") + '.' + fileExt;
+
                     // set background
-                    util.download(background.filename, 'backgrounds/' + background.title, function() {
+                    util.download(background.filename, 'backgrounds/' + backgroundName, function() {
                         console.log('Download successful for ' + background.filename + '(' + background.title + ')');
-                        wallpaper.set('./backgrounds/' + background.title);
+                        wallpaper.set('./backgrounds/' + backgroundName);
                         // fire notification
                         notifier.notify({
                             title: 'Background changed',
                             message: background.title,
-                            icon: path.join(__dirname, 'backgrounds/' + background.title),
+                            icon: path.join(__dirname, 'backgrounds/' + backgroundName),
                             sound: true
                         }, function (err, response) { });
                     });
@@ -68,15 +71,18 @@ function setLatestBackground() {
 
         /* Set the alternate background if todays background did not work. */
         if (altBack == true && altBackObj != null) {
+            var fileExt = altBackObj.filename.substr(altBackObj.filename.lastIndexOf('.') + 1);
+            var backgroundName = altBackObj.title.replace(/ /g,"_").replace(/,/g,"_") + '.' + fileExt;
+
             // set background
-            util.download(altBackObj.filename, 'backgrounds/' + altBackObj.title, function() {
+            util.download(altBackObj.filename, 'backgrounds/' + backgroundName, function() {
                 console.log('Download successful for ' + altBackObj.filename + '(' + altBackObj.title + ')');
-                wallpaper.set('./backgrounds/' + altBackObj.title);
+                wallpaper.set('./backgrounds/' + backgroundName);
                 // fire notification
                 notifier.notify({
                     title: 'Background changed',
                     message: altBackObj.title,
-                    icon: path.join(__dirname, 'backgrounds/' + altBackObj.title),
+                    icon: path.join(__dirname, 'backgrounds/' + backgroundName),
                     sound: true
                 }, function (err, response) { });
             });
@@ -110,6 +116,3 @@ function main() {
 }
 
 main();
-schedule.scheduleJob({hour: 0, minute: 0}, () => {
-    main();
-});
