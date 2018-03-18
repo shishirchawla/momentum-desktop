@@ -116,3 +116,7 @@ function main() {
 }
 
 main();
+schedule.scheduleJob({hour: 0, minute: 0}, () => {
+    main();
+});
+
